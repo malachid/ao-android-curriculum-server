@@ -7,6 +7,7 @@ RESTful server for ao-android-curriculum
 * `mvn package`
 * `java -jar target/ao-android-curriculum-server-1.0-SNAPSHOT-jar-with-dependencies.jar`
 * Open [http://localhost:4567/hello](http://localhost:4567/hello)
+* cURL examples below
 
 ### Examples
 
@@ -275,29 +276,22 @@ RESTful server for ao-android-curriculum
 
 #### delete/13
 
-`http delete http://localhost:4567/authors/delete/13`
+`curl -X DELETE 'http://localhost:4567/authors/delete/13'`
 
 ```
-HTTP/1.1 200 OK
-Content-Type: text/html;charset=utf-8
-Date: Sat, 01 Dec 2018 01:20:00 GMT
-Server: Jetty(9.3.z-SNAPSHOT)
-Transfer-Encoding: chunked
-
 ok
-
 ```
 
 `curl http://localhost:4567/authors/13`
 
-```json
+```
 null
 ```
 
 #### authors/create
 
-Currently not working.
+`curl -X POST 'http://localhost:4567/authors/create' --data-urlencode 'firstName=Malachi' --data-urlencode 'lastName=de AElfweald'`
 
 ```
-[qtp35313097-34] INFO spark.http.matching.MatcherFilter - The requested route [/authors/create] has not been mapped in Spark for Accept: [application/json, */*]
+ok
 ```
