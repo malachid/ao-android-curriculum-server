@@ -26,6 +26,6 @@ class DAO {
      * Storing these in-memory as we want to start fresh whenever the server is restarted.
      */
     val authors = AuthorDAO(onDiskBooks)
-    val books = BookDAO(onDiskBooks)
+    val books = BookDAO(onDiskBooks, authors)
     val readingList = ReadingListDAO(onDiskList, books)
 }

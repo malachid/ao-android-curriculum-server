@@ -22,6 +22,10 @@ fun main(args: Array<String>) {
             DAO.gson.toJson(dao.readingList.findById(req.id()))
         }
 
+        get("/complete/:id") { req, res ->
+            DAO.gson.toJson(dao.readingList.complete(req.id()))
+        }
+
         post("/create") { req, res ->
             dao.readingList.save(
                 title = req.qp("firstName"),
@@ -57,6 +61,10 @@ fun main(args: Array<String>) {
 
         get("/:id") { req, res ->
             DAO.gson.toJson(dao.books.findById(req.id()))
+        }
+
+        get("/complete/:id") { req, res ->
+            DAO.gson.toJson(dao.books.complete(req.id()))
         }
 
         post("/create") { req, res ->

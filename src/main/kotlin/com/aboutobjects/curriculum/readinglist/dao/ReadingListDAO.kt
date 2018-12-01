@@ -28,6 +28,20 @@ class ReadingListDAO(val onDiskList: OnDiskReadingList, val booksDAO: BookDAO) {
         return data[id]
     }
 
+    fun complete(id: Int): ReadingList? {
+        val source = data[id]
+        return source?.copy(
+            bookIds = null,
+            books = source
+                .bookIds.orEmpty()
+                .mapNotNull {
+                    booksDAO.complete(it)
+                }
+                .map { it.id to it  }
+                .toMap()
+        )
+    }
+
     fun update(id: Int, title: String? = null, bookIds: List<Int> = emptyList()) {
         data[id] = ReadingList(
             title = title,

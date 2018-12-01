@@ -4,7 +4,7 @@ import com.aboutobjects.curriculum.readinglist.model.Book
 import com.aboutobjects.curriculum.readinglist.model.OnDiskBook
 import java.util.concurrent.atomic.AtomicInteger
 
-class BookDAO(val onDiskBooks: List<OnDiskBook>) {
+class BookDAO(val onDiskBooks: List<OnDiskBook>, val authors: AuthorDAO) {
     val data: MutableMap<Int, Book> = onDiskBooks
         .distinctBy { it.id }
         .map { it -> Book(
@@ -31,6 +31,14 @@ class BookDAO(val onDiskBooks: List<OnDiskBook>) {
 
     fun findById(id: Int): Book? {
         return data[id]
+    }
+
+    fun complete(id: Int): Book? {
+        val source = data[id]
+        return source?.copy(
+            authorId = null,
+            author = source.authorId?.let { authors.findById(it) }
+        )
     }
 
     fun update(id: Int, title: String? = null, authorId: Int, year: String? = null) {
