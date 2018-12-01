@@ -37,8 +37,7 @@ class ReadingListDAO(val onDiskList: OnDiskReadingList, val booksDAO: BookDAO) {
                 .mapNotNull {
                     booksDAO.complete(it)
                 }
-                .map { it.id to it  }
-                .toMap()
+                .toList()
         )
     }
 

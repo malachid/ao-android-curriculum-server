@@ -320,8 +320,8 @@ ok
 ```json
 {
   "title": "My Summer Reading",
-  "books": {
-    "0": {
+  "books": [
+    {
       "title": "For Whom the Bell Tolls",
       "author": {
         "firstName": "Ernest",
@@ -331,7 +331,7 @@ ok
       "year": "1951",
       "id": 0
     },
-    "1": {
+    {
       "title": "War of the Worlds",
       "author": {
         "firstName": "H. G.",
@@ -341,7 +341,7 @@ ok
       "year": "1898",
       "id": 1
     },
-    "2": {
+    {
       "title": "The Time Machine",
       "author": {
         "firstName": "H. G.",
@@ -351,7 +351,7 @@ ok
       "year": "1897",
       "id": 2
     },
-    "3": {
+    {
       "title": "Alice in Wonderland",
       "author": {
         "firstName": "Lewis",
@@ -361,7 +361,7 @@ ok
       "year": "1865",
       "id": 3
     },
-    "4": {
+    {
       "title": "Nature",
       "author": {
         "firstName": "Ralph Waldo",
@@ -371,7 +371,7 @@ ok
       "year": "1836",
       "id": 4
     },
-    "5": {
+    {
       "title": "Macbeth",
       "author": {
         "firstName": "William",
@@ -381,7 +381,7 @@ ok
       "year": "1603",
       "id": 5
     },
-    "6": {
+    {
       "title": "Winnie The Pooh",
       "author": {
         "firstName": "A. A.",
@@ -391,7 +391,7 @@ ok
       "year": "1926",
       "id": 6
     },
-    "7": {
+    {
       "title": "Adventures Of Huckleberry Finn",
       "author": {
         "firstName": "Mark",
@@ -401,7 +401,7 @@ ok
       "year": "1884",
       "id": 7
     },
-    "8": {
+    {
       "title": "War And Peace",
       "author": {
         "firstName": "Leo",
@@ -411,7 +411,7 @@ ok
       "year": "1869",
       "id": 8
     },
-    "9": {
+    {
       "title": "Sense And Sensibility",
       "author": {
         "firstName": "Jane",
@@ -421,7 +421,7 @@ ok
       "year": "1811",
       "id": 9
     },
-    "10": {
+    {
       "title": "Emma",
       "author": {
         "firstName": "Jane",
@@ -431,7 +431,7 @@ ok
       "year": "1816",
       "id": 10
     },
-    "11": {
+    {
       "title": "The Brothers Karamozov",
       "author": {
         "firstName": "Fyodor",
@@ -441,7 +441,7 @@ ok
       "year": "1880",
       "id": 11
     },
-    "12": {
+    {
       "title": "Principia",
       "author": {
         "firstName": "Sir Isaac",
@@ -451,7 +451,7 @@ ok
       "year": "1687",
       "id": 12
     },
-    "13": {
+    {
       "title": "Leaves of Grass",
       "author": {
         "firstName": "Walt",
@@ -461,7 +461,7 @@ ok
       "year": "1855",
       "id": 13
     },
-    "14": {
+    {
       "title": "Utopia",
       "author": {
         "firstName": "Sir Thomas",
@@ -471,7 +471,7 @@ ok
       "year": "1516",
       "id": 14
     },
-    "15": {
+    {
       "title": "Novum Organum",
       "author": {
         "firstName": "Sir Francis",
@@ -481,7 +481,7 @@ ok
       "year": "1620",
       "id": 15
     },
-    "16": {
+    {
       "title": "Henry V",
       "author": {
         "firstName": "William",
@@ -491,7 +491,7 @@ ok
       "year": "1599",
       "id": 16
     },
-    "17": {
+    {
       "title": "The Mill on the Floss",
       "author": {
         "firstName": "George",
@@ -501,7 +501,7 @@ ok
       "year": "1860",
       "id": 17
     }
-  },
+  ],
   "id": 0
 }
 ```

@@ -1,17 +1,33 @@
 package com.aboutobjects.curriculum.readinglist
 
 import com.aboutobjects.curriculum.readinglist.dao.DAO
+import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Spark.*
 
 
 val dao = DAO()
+val logger = LoggerFactory.getLogger("ReadingList")
 
 fun main(args: Array<String>) {
 
 //    port(9091)
 
-    get("/hello") { req, res -> "Hello ${dao.readingList.data.size} reading lists containing ${dao.books.data.size} books and ${dao.authors.data.size} authors" }
+    before("/*") { req, res ->
+        logger.info("API ${req.url()} ")
+    }
+
+    get("/hello") { req, res ->
+        """
+            <h2>Welcome to the Curriculum RESTful Server</h2>
+            Serving on ${req.host()}
+            <ul>
+                <li>Reading Lists: ${dao.readingList.data.size}</li>
+                <li>Books: ${dao.books.data.size}</li>
+                <li>Authors: ${dao.authors.data.size}</li>
+            </ul>
+        """.trimIndent()
+    }
 
     path("/lists") {
         get("") { req, res ->

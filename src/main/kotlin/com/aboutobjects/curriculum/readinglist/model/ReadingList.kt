@@ -6,7 +6,7 @@ data class ReadingList(
     // By default, only include a list of bookIds
     val bookIds: List<Int>? = null,
     // Optionally, include the full book references instead
-    val books: Map<Int, Book>? = null,
+    val books: List<Book>? = null,
     // id of the reading list
     val id: Int
 )
