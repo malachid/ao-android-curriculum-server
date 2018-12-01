@@ -4,8 +4,10 @@ RESTful server for ao-android-curriculum
 #### WIP
 
 * download [this](https://gist.githubusercontent.com/malachid/42016991438ab9dcd3155c7db72521f3/raw/d16d4dd991f5505be43ebef4bc7b8f3b6a50dc6a/BooksAndAuthors-v2.json) and save it in your ao-android-curriculum-server directory as BooksAndAuthors.json
-* `mvn package`
-* `java -jar target/ao-android-curriculum-server-1.0-SNAPSHOT-jar-with-dependencies.jar`
+* Right-click on `Main.kt` and choose `Run`
+  * Alternatively, you can run it manually from the command-line
+    * `mvn package`
+    * `java -jar target/ao-android-curriculum-server-1.0-SNAPSHOT-jar-with-dependencies.jar`
 * Open [http://localhost:4567/hello](http://localhost:4567/hello)
 * cURL examples below
 
