@@ -7,7 +7,7 @@ RESTful server for ao-android-curriculum
 * Right-click on `Main.kt` and choose `Run`
   * Alternatively, you can run it manually from the command-line
     * `mvn package`
-    * `java -jar target/ao-android-curriculum-server-1.0-SNAPSHOT-jar-with-dependencies.jar`
+    * `./run.sh`
 * Open [http://localhost:4567/hello](http://localhost:4567/hello)
 * cURL examples below
 
