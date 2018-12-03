@@ -42,8 +42,8 @@ fun main(args: Array<String>) {
             <h4>Full</h4>
             <p>'?full=true' allow the child IDs to be replaced with fully-populated references.</p>
             <ul>
-                <li><a href="$host/lists?full=true">Full Reading List</a> (<i>/lists?full=true</i> using Book and Author ref)</li>
-                <li><a href="$host/lists/0?full=true">Full Reading List</a> (<i>/lists/0?full=true</i> using Book and Author ref)</li>
+                <li><a href="$host/lists?full=true">ALL Full Reading Lists</a> (<i>/lists?full=true</i> using Book and Author ref)</li>
+                <li><a href="$host/lists/0?full=true">Full Specific Reading List</a> (<i>/lists/0?full=true</i> using Book and Author ref)</li>
                 <li><a href="$host/books?full=true">Full Books</a> (<i>/books?full=true</i> using Author ref)</li>
                 <li><a href="$host/books/0?full=true">Full Book</a> (<i>/books/0?full=true</i> using Author ref)</li>
             </ul>
