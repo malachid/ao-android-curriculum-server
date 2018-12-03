@@ -11,6 +11,11 @@ RESTful server for ao-android-curriculum
 * Open [http://localhost:4567/hello](http://localhost:4567/hello)
 * cURL examples below
 
+Note: If you need to expose the server with a public url:
+* Install [ngrok](https://ngrok.com/)
+* make sure you have run `ngrok authtoken <YOURAUTHTOKEN>` at least once
+* run `ngrok http 4567`
+
 ### Examples
 
 #### lists
