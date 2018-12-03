@@ -4,6 +4,7 @@ import com.aboutobjects.curriculum.readinglist.dao.DAO
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Spark.*
+import java.net.NetworkInterface
 
 
 val dao = DAO()
@@ -18,13 +19,26 @@ fun main(args: Array<String>) {
     }
 
     get("/hello") { req, res ->
+        val host = "http://${getAddress()}:${req.port()}"
         """
             <h2>Welcome to the Curriculum RESTful Server</h2>
-            Serving on ${req.host()}
+            Serving on <a href="$host/hello">$host</a>
             <ul>
                 <li>Reading Lists: ${dao.readingList.data.size}</li>
                 <li>Books: ${dao.books.data.size}</li>
                 <li>Authors: ${dao.authors.data.size}</li>
+            </ul>
+            Below are some example requests. Note: The content is being sent pretty-printed, so while the browser will not show it that way, you can View Source to see a better representation.
+            <ul>
+                <li><a href="$host/lists">Reading List</a> (/lists)</li>
+                <li><a href="$host/books">Books</a> (/books)</li>
+                <li><a href="$host/authors">Authors</a> (/authors)</li>
+                <li><a href="$host/authors/13">Specific Author</a> (/authors/13)</li>
+                <li><a href="$host/books/12">Specific Book</a> (/books/12)</li>
+                <li><a href="$host/books/complete/0">Complete Book</a> (/books/complete/0)</li>
+                <li><a href="$host/lists/complete/0">Complete Reading List</a> (/lists/complete/0)</li>
+                <li>DELETE /authors/delete/13 not shown</li>
+                <li>POST /authors/create not shown</li>
             </ul>
         """.trimIndent()
     }
@@ -141,6 +155,20 @@ fun main(args: Array<String>) {
             "ok"
         }
     }
+
+}
+
+// REF: https://www.javachannel.org/posts/getting-a-usable-non-localhost-ip-address-for-a-jvm/
+fun getAddress(): String {
+    return NetworkInterface.getNetworkInterfaces()
+        .toList().flatMap {
+            it.inetAddresses
+                .toList()
+                .filter { it.address.size == 4 }
+                .filter { !it.isLoopbackAddress }
+                .filter { it.address[0] != 10.toByte() }
+                .map { it.hostAddress }
+        }.first()
 }
 
 fun Request.qp(key: String): String = this.queryParams(key)

@@ -10,8 +10,9 @@ RESTful server for ao-android-curriculum
     * `./run.sh`
 * Open [http://localhost:4567/hello](http://localhost:4567/hello)
   * You'll want to give your actual IP address instead of localhost to the classroom.
-    * Find your local IP address [on a Windows/MAC](https://kb.netgear.com/20878/Finding-your-IP-address-without-using-the-command-prompt)
-    * Find your local IP address [on Linux](https://stackabuse.com/how-to-get-your-ip-address-on-linux/)
+    * That page will show your actual IP address.
+    * Alternatively, find your local IP address [on a Windows/MAC](https://kb.netgear.com/20878/Finding-your-IP-address-without-using-the-command-prompt)
+    * Alternatively, find your local IP address [on Linux](https://stackabuse.com/how-to-get-your-ip-address-on-linux/)
 * cURL examples below
 
 Note: If you need to expose the server with a public url:
