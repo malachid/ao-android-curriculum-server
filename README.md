@@ -19,6 +19,7 @@ Note: If you need to expose the server with a public url:
 * Install [ngrok](https://ngrok.com/)
 * make sure you have run `ngrok authtoken <YOURAUTHTOKEN>` at least once
 * run `ngrok http 4567`
+* After connecting to the server endpoint via the tunnel, access the dashboard at [http://localhost:4040](http://localhost:4040)
 
 ### Examples
 
