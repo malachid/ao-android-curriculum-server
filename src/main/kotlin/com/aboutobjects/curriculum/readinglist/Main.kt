@@ -28,37 +28,59 @@ fun main(args: Array<String>) {
                 <li>Books: ${dao.books.data.size}</li>
                 <li>Authors: ${dao.authors.data.size}</li>
             </ul>
-            Below are some example requests. Note: The content is being sent pretty-printed, so while the browser will not show it that way, you can View Source to see a better representation.
+            <h3>Example Requests</h3>
+            <p>Below are some example requests. Note: The content is being sent pretty-printed, so while the browser will not show it that way, you can View Source to see a better representation.</p>
+            <h4>Default</h4>
+            <p>Default is to represent child Books and Authors by their ID only.</p>
             <ul>
-                <li><a href="$host/lists">Reading List</a> (/lists)</li>
-                <li><a href="$host/books">Books</a> (/books)</li>
-                <li><a href="$host/authors">Authors</a> (/authors)</li>
-                <li><a href="$host/authors/13">Specific Author</a> (/authors/13)</li>
-                <li><a href="$host/books/12">Specific Book</a> (/books/12)</li>
-                <li><a href="$host/books/complete/0">Complete Book</a> (/books/complete/0)</li>
-                <li><a href="$host/lists/complete/0">Complete Reading List</a> (/lists/complete/0)</li>
-                <li>DELETE /authors/delete/13 not shown</li>
-                <li>POST /authors/create not shown</li>
+                <li><a href="$host/lists">Reading List</a> (<i>/lists</i> using Book ids)</li>
+                <li><a href="$host/books">Books</a> (<i>/books</i> using Author ids)</li>
+                <li><a href="$host/books/12">Specific Book</a> (<i>/books/12</i> using Author ids)</li>
+                <li><a href="$host/authors">Authors</a> (<i>/authors</i>)</li>
+                <li><a href="$host/authors/13">Specific Author</a> (<i>/authors/13</i>)</li>
+            </ul>
+            <h4>Full</h4>
+            <p>'?full=true' allow the child IDs to be replaced with fully-populated references.</p>
+            <ul>
+                <li><a href="$host/lists?full=true">Full Reading List</a> (<i>/lists?full=true</i> using Book and Author ref)</li>
+                <li><a href="$host/lists/0?full=true">Full Reading List</a> (<i>/lists/0?full=true</i> using Book and Author ref)</li>
+                <li><a href="$host/books?full=true">Full Books</a> (<i>/books?full=true</i> using Author ref)</li>
+                <li><a href="$host/books/0?full=true">Full Book</a> (<i>/books/0?full=true</i> using Author ref)</li>
+            </ul>
+            <h4>Non-GET</h4>
+            <p>These can not be represented by a standard GET call in the web browser</p>
+            <ul>
+                <li>DELETE /lists/delete/1</li>
+                <li>POST /lists/create title="My Reading List" bookIds="2,5,10"</li>
+                <li>PATCH /lists/update/1 title="My Reading List" bookIds="2,5,10"</li>
+                <li>DELETE /books/delete/5</li>
+                <li>POST /books/create title="My Title" year="2020" authorId=13</li>
+                <li>PATCH /books/update/5 title="My Title" year="2020" authorId=13</li>
+                <li>DELETE /authors/delete/5</li>
+                <li>POST /authors/create title="My Title" year="2020" authorId=13</li>
+                <li>PATCH /authors/update/5 title="My Title" year="2020" authorId=13</li>
             </ul>
         """.trimIndent()
     }
 
     path("/lists") {
         get("") { req, res ->
-            DAO.gson.toJson(dao.readingList.data)
+            when {
+                req.full() -> DAO.gson.toJson(dao.readingList.complete())
+                else -> DAO.gson.toJson(dao.readingList.data)
+            }
         }
 
         get("/:id") { req, res ->
-            DAO.gson.toJson(dao.readingList.findById(req.id()))
-        }
-
-        get("/complete/:id") { req, res ->
-            DAO.gson.toJson(dao.readingList.complete(req.id()))
+            when{
+                req.full() -> DAO.gson.toJson(dao.readingList.complete(req.id()))
+                else -> DAO.gson.toJson(dao.readingList.findById(req.id()))
+            }
         }
 
         post("/create") { req, res ->
             dao.readingList.save(
-                title = req.qp("firstName"),
+                title = req.qp("title"),
                 bookIds = req.qp("bookIds")
                     .split(",")
                     .map { it -> it.toInt() }
@@ -70,7 +92,7 @@ fun main(args: Array<String>) {
         patch("/update/:id") { req, res ->
             dao.readingList.update(
                 id = req.id(),
-                title = req.qp("firstName"),
+                title = req.qp("title"),
                 bookIds = req.qp("bookIds")
                     .split(",")
                     .map { it -> it.toInt() }
@@ -86,21 +108,23 @@ fun main(args: Array<String>) {
 
     path("/books") {
         get("") { req, res ->
-            DAO.gson.toJson(dao.books.data)
+            when {
+                req.full() -> DAO.gson.toJson(dao.books.complete())
+                else -> DAO.gson.toJson(dao.books.data)
+            }
         }
 
         get("/:id") { req, res ->
-            DAO.gson.toJson(dao.books.findById(req.id()))
-        }
-
-        get("/complete/:id") { req, res ->
-            DAO.gson.toJson(dao.books.complete(req.id()))
+            when {
+                req.full() -> DAO.gson.toJson(dao.books.complete(req.id()))
+                else -> DAO.gson.toJson(dao.books.findById(req.id()))
+            }
         }
 
         post("/create") { req, res ->
             dao.books.save(
-                title = req.qp("firstName"),
-                year = req.qp("lastName"),
+                title = req.qp("title"),
+                year = req.qp("year"),
                 authorId = req.qp("authorId").toInt()
             )
             res.status(201)
@@ -110,8 +134,8 @@ fun main(args: Array<String>) {
         patch("/update/:id") { req, res ->
             dao.books.update(
                 id = req.id(),
-                title = req.qp("firstName"),
-                year = req.qp("lastName"),
+                title = req.qp("title"),
+                year = req.qp("year"),
                 authorId = req.qp("authorId").toInt()
             )
             "ok"
@@ -173,3 +197,4 @@ fun getAddress(): String {
 
 fun Request.qp(key: String): String = this.queryParams(key)
 fun Request.id(): Int = this.params("id").toInt()
+fun Request.full(): Boolean = (this.queryParams("full") == "true")

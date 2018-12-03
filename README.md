@@ -309,7 +309,7 @@ ok
 
 #### books/complete
 
-`curl http://localhost:4567/books/complete/0`
+`curl http://localhost:4567/books/0?full=true`
 ```json
 {
   "title": "For Whom the Bell Tolls",
@@ -326,7 +326,7 @@ ok
 
 #### lists/complete
 
-`curl http://localhost:4567/lists/complete/0`
+`curl http://localhost:4567/lists/0?full=true`
 
 ```json
 {

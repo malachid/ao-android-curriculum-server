@@ -33,6 +33,16 @@ class BookDAO(val onDiskBooks: List<OnDiskBook>, val authors: AuthorDAO) {
         return data[id]
     }
 
+    fun complete(): Map<Int, Book> {
+        return data.map {
+            val source = it.value
+            it.key to source.copy(
+                authorId = null,
+                author = source.authorId?.let { authors.findById(source.authorId) }
+            )
+        }.toMap()
+    }
+
     fun complete(id: Int): Book? {
         val source = data[id]
         return source?.copy(
