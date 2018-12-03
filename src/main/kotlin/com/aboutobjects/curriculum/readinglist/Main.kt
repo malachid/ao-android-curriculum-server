@@ -79,14 +79,14 @@ fun main(args: Array<String>) {
         }
 
         post("/create") { req, res ->
-            dao.readingList.save(
+            val list = dao.readingList.save(
                 title = req.qp("title"),
                 bookIds = req.qp("bookIds")
                     .split(",")
                     .map { it -> it.toInt() }
             )
             res.status(201)
-            "ok"
+            DAO.gson.toJson(list)
         }
 
         patch("/update/:id") { req, res ->
@@ -122,13 +122,13 @@ fun main(args: Array<String>) {
         }
 
         post("/create") { req, res ->
-            dao.books.save(
+            val book = dao.books.save(
                 title = req.qp("title"),
                 year = req.qp("year"),
                 authorId = req.qp("authorId").toInt()
             )
             res.status(201)
-            "ok"
+            DAO.gson.toJson(book)
         }
 
         patch("/update/:id") { req, res ->
@@ -157,12 +157,12 @@ fun main(args: Array<String>) {
         }
 
         post("/create") { req, res ->
-            dao.authors.save(
+            val author = dao.authors.save(
                 firstName = req.qp("firstName"),
                 lastName = req.qp("lastName")
             )
             res.status(201)
-            "ok"
+            DAO.gson.toJson(author)
         }
 
         patch("/update/:id") { req, res ->

@@ -15,13 +15,16 @@ class ReadingListDAO(val onDiskList: OnDiskReadingList, val booksDAO: BookDAO) {
 
     var lastId: AtomicInteger = AtomicInteger(data.size - 1)
 
-    fun save(title: String? = null, bookIds: List<Int> = emptyList()) {
+    fun save(title: String? = null, bookIds: List<Int> = emptyList()): ReadingList {
         val id = lastId.incrementAndGet()
-        data[id] = ReadingList(
+        ReadingList(
             title = title,
             bookIds = bookIds,
             id = id
-        )
+        ).let {
+            data[id] = it
+            return it
+        }
     }
 
     fun findById(id: Int): ReadingList? {

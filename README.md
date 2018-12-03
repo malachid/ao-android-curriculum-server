@@ -303,8 +303,43 @@ null
 
 `curl -X POST 'http://localhost:4567/authors/create' --data-urlencode 'firstName=Malachi' --data-urlencode 'lastName=de AElfweald'`
 
+```json
+{
+  "firstName": "Malachi",
+  "lastName": "de AElfweald",
+  "id": 15
+}
 ```
-ok
+
+
+#### books/create
+
+`curl -X POST 'http://localhost:4567/books/create' --data-urlencode 'title=My Book' --data-urlencode year='2020' --data-urlencode authorId=15`
+
+```json
+{
+  "title": "My Book",
+  "authorId": 15,
+  "year": "2020",
+  "id": 18
+}
+```
+
+#### lists/create
+
+`curl -X POST 'http://localhost:4567/lists/create' --data-urlencode 'title=My Reading List' --data-urlencode 'bookIds=1,2,5,10'`
+
+```json
+{
+  "title": "My Reading List",
+  "bookIds": [
+    1,
+    2,
+    5,
+    10
+  ],
+  "id": 1
+}
 ```
 
 #### books/complete

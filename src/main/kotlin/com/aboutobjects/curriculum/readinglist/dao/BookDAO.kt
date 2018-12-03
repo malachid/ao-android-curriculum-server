@@ -19,14 +19,17 @@ class BookDAO(val onDiskBooks: List<OnDiskBook>, val authors: AuthorDAO) {
 
     var lastId: AtomicInteger = AtomicInteger(data.size - 1)
 
-    fun save(title: String? = null, authorId: Int, year: String? = null) {
+    fun save(title: String? = null, authorId: Int, year: String? = null): Book {
         val id = lastId.incrementAndGet()
-        data[id] = Book(
+        Book(
             title = title,
             authorId = authorId,
             year = year,
             id = id
-        )
+        ).let {
+            data[id] = it
+            return it
+        }
     }
 
     fun findById(id: Int): Book? {
