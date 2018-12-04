@@ -59,6 +59,7 @@ fun main(args: Array<String>) {
                 <li>DELETE /authors/delete/5</li>
                 <li>POST /authors/create title="My Title" year="2020" authorId=13</li>
                 <li>PATCH /authors/update/5 title="My Title" year="2020" authorId=13</li>
+                <li>POST /authors/find firstName="William" lastName="Shakespeare"</li>
             </ul>
         """.trimIndent()
     }
@@ -154,6 +155,20 @@ fun main(args: Array<String>) {
 
         get("/:id") { req, res ->
             DAO.gson.toJson(dao.authors.findById(req.id()))
+        }
+
+        post("/find") { req, res ->
+            val author = dao.authors.findByName(
+                firstName = req.queryParams("firstName"),
+                lastName = req.queryParams("lastName")
+            )
+            when(author) {
+                null -> {
+                    res.status(404)
+                    "<html><body><h2>404 Author Not found</h2></body></html>"
+                }
+                else -> DAO.gson.toJson(author)
+            }
         }
 
         post("/create") { req, res ->

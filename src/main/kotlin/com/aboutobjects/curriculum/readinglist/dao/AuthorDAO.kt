@@ -30,6 +30,13 @@ class AuthorDAO(val onDiskBooks: List<OnDiskBook>) {
         return data[id]
     }
 
+    fun findByName(firstName: String?, lastName: String?): Author? {
+        return data.values.firstOrNull {
+            (firstName == null || it.firstName == firstName)
+            && (lastName == null || it.lastName == lastName)
+        }
+    }
+
     fun update(id: Int, firstName: String, lastName: String) {
         data[id] = Author(
             firstName = firstName,

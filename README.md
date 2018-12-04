@@ -312,6 +312,36 @@ null
 }
 ```
 
+#### authors/find
+
+`curl -X POST 'http://localhost:4567/authors/find' --data-urlencode 'firstName=Sir Francis' --data-urlencode 'lastName=Bacon'`
+
+```json
+{
+  "firstName": "Sir Francis",
+  "lastName": "Bacon",
+  "id": 13
+}
+```
+
+`curl -X POST 'http://localhost:4567/authors/find' --data-urlencode 'lastName=Shakespeare'`
+
+```json
+{
+  "firstName": "William",
+  "lastName": "Shakespeare",
+  "id": 4
+}
+
+```
+
+
+`curl -X POST 'localhost:4567/authors/find' --data-urlencode 'lastName=Thomas'`
+
+```html
+<html><body><h2>404 Author Not found</h2></body></html>
+```
+
 
 #### books/create
 
@@ -343,7 +373,7 @@ null
 }
 ```
 
-#### books/complete
+#### books/0?full=true
 
 `curl http://localhost:4567/books/0?full=true`
 ```json
@@ -360,7 +390,7 @@ null
 ```
 
 
-#### lists/complete
+#### lists/0?full=true
 
 `curl http://localhost:4567/lists/0?full=true`
 
