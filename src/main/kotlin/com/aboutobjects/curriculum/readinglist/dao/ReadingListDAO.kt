@@ -59,12 +59,15 @@ class ReadingListDAO(val onDiskList: OnDiskReadingList, val booksDAO: BookDAO) {
         )
     }
 
-    fun update(id: Int, title: String? = null, bookIds: List<Int> = emptyList()) {
-        data[id] = ReadingList(
+    fun update(id: Int, title: String? = null, bookIds: List<Int> = emptyList()): ReadingList {
+        ReadingList(
             title = title,
             bookIds = bookIds,
             id = id
-        )
+        ).let {
+            data[id] = it
+            return it
+        }
     }
 
     fun delete(id: Int) {

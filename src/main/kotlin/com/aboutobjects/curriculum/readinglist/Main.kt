@@ -52,15 +52,16 @@ fun main(args: Array<String>) {
             <ul>
                 <li>DELETE /lists/delete/1</li>
                 <li>POST /lists/create title="My Reading List" bookIds="2,5,10"</li>
-                <li>PATCH /lists/update/1 title="My Reading List" bookIds="2,5,10"</li>
+                <li>POST /lists/update/1 title="My Reading List" bookIds="2,5,10"</li>
                 <li>DELETE /books/delete/5</li>
                 <li>POST /books/create title="My Title" year="2020" authorId=13</li>
-                <li>PATCH /books/update/5 title="My Title" year="2020" authorId=13</li>
+                <li>POST /books/update/5 title="My Title" year="2020" authorId=13</li>
                 <li>DELETE /authors/delete/5</li>
                 <li>POST /authors/create title="My Title" year="2020" authorId=13</li>
-                <li>PATCH /authors/update/5 title="My Title" year="2020" authorId=13</li>
+                <li>POST /authors/update/5 title="My Title" year="2020" authorId=13</li>
                 <li>POST /authors/find firstName="William" lastName="Shakespeare"</li>
             </ul>
+            Note: The `update` calls are using POST rather than PATCH due to simpler server-side programming.
         """.trimIndent()
     }
 
@@ -90,15 +91,17 @@ fun main(args: Array<String>) {
             DAO.gson.toJson(list)
         }
 
-        patch("/update/:id") { req, res ->
-            dao.readingList.update(
+        // NOTE: don't use `patch` or you have to manually parse the `body` instead of using the `queryParams`
+        post("/update/:id") { req, res ->
+            val list = dao.readingList.update(
                 id = req.id(),
                 title = req.qp("title"),
                 bookIds = req.qp("bookIds")
                     .split(",")
                     .map { it -> it.toInt() }
             )
-            "ok"
+            res.status(201)
+            DAO.gson.toJson(list)
         }
 
         delete("/delete/:id") { req, res ->
@@ -132,14 +135,16 @@ fun main(args: Array<String>) {
             DAO.gson.toJson(book)
         }
 
-        patch("/update/:id") { req, res ->
-            dao.books.update(
+        // NOTE: don't use `patch` or you have to manually parse the `body` instead of using the `queryParams`
+        post("/update/:id") { req, res ->
+            val book = dao.books.update(
                 id = req.id(),
                 title = req.qp("title"),
                 year = req.qp("year"),
                 authorId = req.qp("authorId").toInt()
             )
-            "ok"
+            res.status(201)
+            DAO.gson.toJson(book)
         }
 
         delete("/delete/:id") { req, res ->
@@ -180,13 +185,15 @@ fun main(args: Array<String>) {
             DAO.gson.toJson(author)
         }
 
-        patch("/update/:id") { req, res ->
-            dao.authors.update(
+        // NOTE: don't use `patch` or you have to manually parse the `body` instead of using the `queryParams`
+        post("/update/:id") { req, res ->
+            val author = dao.authors.update(
                 id = req.id(),
                 firstName = req.qp("firstName"),
                 lastName = req.qp("lastName")
             )
-            "ok"
+            res.status(201)
+            DAO.gson.toJson(author)
         }
 
         delete("/delete/:id") { req, res ->

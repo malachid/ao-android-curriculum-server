@@ -54,13 +54,16 @@ class BookDAO(val onDiskBooks: List<OnDiskBook>, val authors: AuthorDAO) {
         )
     }
 
-    fun update(id: Int, title: String? = null, authorId: Int, year: String? = null) {
-        data[id] = Book(
+    fun update(id: Int, title: String? = null, authorId: Int, year: String? = null): Book {
+        Book(
             title = title,
             authorId = authorId,
             year = year,
             id = id
-        )
+        ).let {
+            data[id] = it
+            return it
+        }
     }
 
     fun delete(id: Int) {

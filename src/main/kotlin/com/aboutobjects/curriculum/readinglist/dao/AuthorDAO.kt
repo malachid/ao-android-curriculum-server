@@ -37,12 +37,15 @@ class AuthorDAO(val onDiskBooks: List<OnDiskBook>) {
         }
     }
 
-    fun update(id: Int, firstName: String, lastName: String) {
-        data[id] = Author(
+    fun update(id: Int, firstName: String, lastName: String): Author {
+        Author(
             firstName = firstName,
             lastName =  lastName,
             id = id
-        )
+        ).let {
+            data[id] = it
+            return it
+        }
     }
 
     fun delete(id: Int) {
