@@ -171,7 +171,6 @@ Note: If you need to expose the server with a public url:
     "id": 17
   }
 }
-
 ```
 
 #### authors
@@ -256,7 +255,6 @@ Note: If you need to expose the server with a public url:
     "id": 14
   }
 }
-
 ```
 
 #### authors/13
@@ -269,7 +267,6 @@ Note: If you need to expose the server with a public url:
   "lastName": "Bacon",
   "id": 13
 }
-
 ```
 
 #### books/12
@@ -283,7 +280,6 @@ Note: If you need to expose the server with a public url:
   "year": "1687",
   "id": 12
 }
-
 ```
 
 #### delete/13
@@ -302,7 +298,7 @@ null
 
 #### authors/create
 
-`curl -X POST 'http://localhost:4567/authors/create' --data-urlencode 'firstName=Malachi' --data-urlencode 'lastName=de AElfweald'`
+`curl -X PUT 'http://localhost:4567/authors/create' --data '{"firstName":"Malachi", "lastName":"de AElfweald"}'`
 
 ```json
 {
@@ -314,7 +310,9 @@ null
 
 #### authors/find
 
-`curl -X POST 'http://localhost:4567/authors/find' --data-urlencode 'firstName=Sir Francis' --data-urlencode 'lastName=Bacon'`
+Assuming you didn't delete him above:
+
+`curl-X POST 'http://localhost:4567/authors/find?lastName=Bacon'`
 
 ```json
 {
@@ -324,7 +322,7 @@ null
 }
 ```
 
-`curl -X POST 'http://localhost:4567/authors/find' --data-urlencode 'lastName=Shakespeare'`
+`curl -X POST 'http://localhost:4567/authors/find?lastName=Shakespeare'`
 
 ```json
 {
@@ -336,7 +334,7 @@ null
 ```
 
 
-`curl -X POST 'localhost:4567/authors/find' --data-urlencode 'lastName=Thomas'`
+`curl -X POST 'localhost:4567/authors/find&lastName=Thomas'`
 
 ```html
 <html><body><h2>404 Author Not found</h2></body></html>
@@ -345,7 +343,7 @@ null
 
 #### books/create
 
-`curl -X POST 'http://localhost:4567/books/create' --data-urlencode 'title=My Book' --data-urlencode year='2020' --data-urlencode authorId=15`
+`curl -X PUT 'http://localhost:4567/books/create' --data '{"title":"My Book", "year":"2020", "authorId":15}'`
 
 ```json
 {
@@ -358,7 +356,7 @@ null
 
 #### lists/create
 
-`curl -X POST 'http://localhost:4567/lists/create' --data-urlencode 'title=My Reading List' --data-urlencode 'bookIds=1,2,5,10'`
+`curl -X PUT 'http://localhost:4567/lists/create' --data '{"title":"My Reading List", "bookIds":[1,2,5,10]}'`
 
 ```json
 {
@@ -372,6 +370,7 @@ null
   "id": 1
 }
 ```
+
 
 #### books/0?full=true
 

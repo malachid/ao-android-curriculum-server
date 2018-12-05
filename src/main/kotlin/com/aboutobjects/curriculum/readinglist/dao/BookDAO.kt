@@ -47,7 +47,10 @@ class BookDAO(val onDiskBooks: List<OnDiskBook>, val authors: AuthorDAO) {
     }
 
     fun complete(id: Int): Book? {
-        val source = data[id]
+        return complete(data[id])
+    }
+
+    fun complete(source: Book?): Book? {
         return source?.copy(
             authorId = null,
             author = source.authorId?.let { authors.findById(it) }

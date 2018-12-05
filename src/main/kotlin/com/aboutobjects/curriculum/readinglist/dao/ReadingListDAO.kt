@@ -47,7 +47,10 @@ class ReadingListDAO(val onDiskList: OnDiskReadingList, val booksDAO: BookDAO) {
     }
 
     fun complete(id: Int): ReadingList? {
-        val source = data[id]
+        return complete(data[id])
+    }
+
+    fun complete(source: ReadingList?): ReadingList? {
         return source?.copy(
             bookIds = null,
             books = source

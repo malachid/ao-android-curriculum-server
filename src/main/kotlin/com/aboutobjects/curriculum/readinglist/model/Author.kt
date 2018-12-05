@@ -6,5 +6,5 @@ data class Author(
     // Last Name of the Author
     val lastName: String? = null,
     // id of the Author
-    val id: Int
+    val id: Int = -1
 )

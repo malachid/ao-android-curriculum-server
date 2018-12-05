@@ -8,5 +8,5 @@ data class ReadingList(
     // Optionally, include the full book references instead
     val books: List<Book>? = null,
     // id of the reading list
-    val id: Int
+    val id: Int = -1
 )

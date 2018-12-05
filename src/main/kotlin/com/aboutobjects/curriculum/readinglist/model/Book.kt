@@ -10,5 +10,5 @@ data class Book(
     // Year the book was published
     val year: String? = null,
     // id of the Book
-    val id: Int
+    val id: Int = -1
 )

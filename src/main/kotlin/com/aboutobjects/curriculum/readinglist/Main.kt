@@ -1,6 +1,9 @@
 package com.aboutobjects.curriculum.readinglist
 
 import com.aboutobjects.curriculum.readinglist.dao.DAO
+import com.aboutobjects.curriculum.readinglist.model.Author
+import com.aboutobjects.curriculum.readinglist.model.Book
+import com.aboutobjects.curriculum.readinglist.model.ReadingList
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Spark.*
@@ -21,6 +24,23 @@ fun main(args: Array<String>) {
     get("/hello") { req, res ->
         val host = "http://${getAddress()}:${req.port()}"
         """
+            <style type="text/css">
+table {
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+tr:hover {background-color: #f5f5f5;}
+tr:nth-child(even) {background-color: #f2f2f2;}
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+            </style>
+
             <h2>Welcome to the Curriculum RESTful Server</h2>
             Serving on <a href="$host/hello">$host</a>
             <ul>
@@ -28,80 +48,179 @@ fun main(args: Array<String>) {
                 <li>Books: ${dao.books.data.size}</li>
                 <li>Authors: ${dao.authors.data.size}</li>
             </ul>
-            <h3>Example Requests</h3>
-            <p>Below are some example requests. Note: The content is being sent pretty-printed, so while the browser will not show it that way, you can View Source to see a better representation.</p>
-            <h4>Default</h4>
-            <p>Default is to represent child Books and Authors by their ID only.</p>
-            <ul>
-                <li><a href="$host/lists">Reading List</a> (<i>/lists</i> using Book ids)</li>
-                <li><a href="$host/books">Books</a> (<i>/books</i> using Author ids)</li>
-                <li><a href="$host/books/12">Specific Book</a> (<i>/books/12</i> using Author ids)</li>
-                <li><a href="$host/authors">Authors</a> (<i>/authors</i>)</li>
-                <li><a href="$host/authors/13">Specific Author</a> (<i>/authors/13</i>)</li>
-            </ul>
-            <h4>Full</h4>
-            <p>'?full=true' allow the child IDs to be replaced with fully-populated references.</p>
-            <ul>
-                <li><a href="$host/lists?full=true">ALL Full Reading Lists</a> (<i>/lists?full=true</i> using Book and Author ref)</li>
-                <li><a href="$host/lists/0?full=true">Full Specific Reading List</a> (<i>/lists/0?full=true</i> using Book and Author ref)</li>
-                <li><a href="$host/books?full=true">Full Books</a> (<i>/books?full=true</i> using Author ref)</li>
-                <li><a href="$host/books/0?full=true">Full Book</a> (<i>/books/0?full=true</i> using Author ref)</li>
-            </ul>
-            <h4>Non-GET</h4>
-            <p>These can not be represented by a standard GET call in the web browser</p>
-            <ul>
-                <li>DELETE /lists/delete/1</li>
-                <li>POST /lists/create title="My Reading List" bookIds="2,5,10"</li>
-                <li>POST /lists/update/1 title="My Reading List" bookIds="2,5,10"</li>
-                <li>DELETE /books/delete/5</li>
-                <li>POST /books/create title="My Title" year="2020" authorId=13</li>
-                <li>POST /books/update/5 title="My Title" year="2020" authorId=13</li>
-                <li>DELETE /authors/delete/5</li>
-                <li>POST /authors/create title="My Title" year="2020" authorId=13</li>
-                <li>POST /authors/update/5 title="My Title" year="2020" authorId=13</li>
-                <li>POST /authors/find firstName="William" lastName="Shakespeare"</li>
-            </ul>
-            Note: The `update` calls are using POST rather than PATCH due to simpler server-side programming.
+            <h3>API</h3>
+            <p>The links below are some example requests. Note: The content is being sent pretty-printed, so while the browser will not show it that way, you can View Source to see a better representation.</p>
+            <p>By default, child Books and Authors are represented only by their IDs (ex: <id>authorId: 10</id>)</p>
+            <p>Some endpoints allow appending <i>?full=true</i> to have the results fully populated.</p>
+
+            <div style="overflow-x:auto;"><table>
+                <tr><th>Method</th><th>Endpoint</th><th>Full Support</th><th>Description</th><th>Required Params</th></tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/hello">/hello</a></td>
+                    <td>NO</td>
+                    <td>This page</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr><th colspan=5>Reading Lists</th></tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/lists">/lists</a></td>
+                    <td>YES<br/><a href="$host/lists?full=true">Example</a></td>
+                    <td>Retrieve all reading lists</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/lists/0">/lists/:id</a></td>
+                    <td>YES<br/><a href="$host/lists/0?full=true">Example</a></td>
+                    <td>Retrieve a specific reading list</td>
+                    <td>ID in url</td>
+                </tr>
+                <tr>
+                    <td>PUT</td>
+                    <td>/lists/create</td>
+                    <td>YES</td>
+                    <td>Create a reading list</td>
+                    <td>`title` and `bookIds` array in body.</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/lists/update/:id</td>
+                    <td>YES</td>
+                    <td>Update an existing reading list</td>
+                    <td>ID in url, `title` and `bookIds` array in body.</td>
+                </tr>
+                <tr>
+                    <td>DELETE</td>
+                    <td>/lists/delete/:id</td>
+                    <td>NO</td>
+                    <td>Delete an existing reading list</td>
+                    <td>ID in url</td>
+                </tr>
+                <tr><th colspan=5>Books</th></tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/books">/books</a></td>
+                    <td>YES<br/><a href="$host/books?full=true">Example</a></td>
+                    <td>Retrieve all books</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/books/12">/books/:id</a></td>
+                    <td>YES<br/><a href="$host/books/12?full=true">Example</a></td>
+                    <td>Retrieve a specific book</td>
+                    <td>ID in url</td>
+                </tr>
+                <tr>
+                    <td>PUT</td>
+                    <td>/books/create</td>
+                    <td>YES</td>
+                    <td>Create a book</td>
+                    <td>`title`, `year` and `authorId` in body.</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/books/update/:id</td>
+                    <td>YES</td>
+                    <td>Update an existing book</td>
+                    <td>ID in url, `title`, `year` and `authorId` in body.</td>
+                </tr>
+                <tr>
+                    <td>DELETE</td>
+                    <td>/books/delete/:id</td>
+                    <td>NO</td>
+                    <td>Delete an existing book</td>
+                    <td>ID in url</td>
+                </tr>
+                <tr><th colspan=5>Authors</th></tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/authors">/authors</a></td>
+                    <td>NO</td>
+                    <td>Retrieve all authors</td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>GET</td>
+                    <td><a href="$host/authors/13">/authors/:id</a></td>
+                    <td>NO</td>
+                    <td>Retrieve a specific author</td>
+                    <td>ID in url</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/authors/find?firstName=Joe&lastName=Smith</td>
+                    <td>NO</td>
+                    <td>Retrieve a specific author, or 404 Not Found</td>
+                    <td>`firstName` and/or `lastName` in the query parameters</td>
+                </tr>
+                <tr>
+                    <td>PUT</td>
+                    <td>/authors/create</td>
+                    <td>NO</td>
+                    <td>Create a author</td>
+                    <td>`firstName` and `lastName` in body.</td>
+                </tr>
+                <tr>
+                    <td>POST</td>
+                    <td>/authors/update/:id</td>
+                    <td>NO</td>
+                    <td>Update an existing author</td>
+                    <td>ID in url, `firstName` and `lastName` in body.</td>
+                </tr>
+                <tr>
+                    <td>DELETE</td>
+                    <td>/authors/delete/:id</td>
+                    <td>NO</td>
+                    <td>Delete an existing author</td>
+                    <td>ID in url</td>
+                </tr>
+            </table></div>
         """.trimIndent()
     }
 
     path("/lists") {
         get("") { req, res ->
-            when {
-                req.full() -> DAO.gson.toJson(dao.readingList.complete())
-                else -> DAO.gson.toJson(dao.readingList.data)
-            }
+            req.jsonOut(
+                fullFn = {dao.readingList.complete()},
+                elseFn = {dao.readingList.data}
+            )
         }
 
         get("/:id") { req, res ->
-            when{
-                req.full() -> DAO.gson.toJson(dao.readingList.complete(req.id()))
-                else -> DAO.gson.toJson(dao.readingList.findById(req.id()))
-            }
+            req.jsonOut(
+                fullFn = {dao.readingList.complete(req.id())},
+                elseFn = {dao.readingList.findById(req.id())}
+            )
         }
 
-        post("/create") { req, res ->
+        put("/create") { req, res ->
+            val model = req.model(ReadingList::class.java)
             val list = dao.readingList.save(
-                title = req.qp("title"),
-                bookIds = req.qp("bookIds")
-                    .split(",")
-                    .map { it -> it.toInt() }
+                title = model.title,
+                bookIds = model.bookIds.orEmpty()
             )
             res.status(201)
-            DAO.gson.toJson(list)
+            req.jsonOut(
+                fullFn = {dao.readingList.complete(list)},
+                elseFn = {list}
+            )
         }
 
-        // NOTE: don't use `patch` or you have to manually parse the `body` instead of using the `queryParams`
         post("/update/:id") { req, res ->
+            val model = req.model(ReadingList::class.java)
             val list = dao.readingList.update(
                 id = req.id(),
-                title = req.qp("title"),
-                bookIds = req.qp("bookIds")
-                    .split(",")
-                    .map { it -> it.toInt() }
+                title = model.title,
+                bookIds = model.bookIds.orEmpty()
             )
             res.status(201)
-            DAO.gson.toJson(list)
+            req.jsonOut(
+                fullFn = {dao.readingList.complete(list)},
+                elseFn = {list}
+            )
         }
 
         delete("/delete/:id") { req, res ->
@@ -112,39 +231,46 @@ fun main(args: Array<String>) {
 
     path("/books") {
         get("") { req, res ->
-            when {
-                req.full() -> DAO.gson.toJson(dao.books.complete())
-                else -> DAO.gson.toJson(dao.books.data)
-            }
+            req.jsonOut(
+                fullFn = {dao.books.complete()},
+                elseFn = {dao.books.data}
+            )
         }
 
         get("/:id") { req, res ->
-            when {
-                req.full() -> DAO.gson.toJson(dao.books.complete(req.id()))
-                else -> DAO.gson.toJson(dao.books.findById(req.id()))
-            }
+            req.jsonOut(
+                fullFn = {dao.books.complete(req.id())},
+                elseFn = {dao.books.findById(req.id())}
+            )
         }
 
-        post("/create") { req, res ->
+        put("/create") { req, res ->
+            val model = req.model(Book::class.java)
             val book = dao.books.save(
-                title = req.qp("title"),
-                year = req.qp("year"),
-                authorId = req.qp("authorId").toInt()
+                title = model.title,
+                year = model.year,
+                authorId = model.authorId ?: -1
             )
             res.status(201)
-            DAO.gson.toJson(book)
+            req.jsonOut(
+                fullFn = {dao.books.complete(book)},
+                elseFn = {book}
+            )
         }
 
-        // NOTE: don't use `patch` or you have to manually parse the `body` instead of using the `queryParams`
         post("/update/:id") { req, res ->
+            val model = req.model(Book::class.java)
             val book = dao.books.update(
                 id = req.id(),
-                title = req.qp("title"),
-                year = req.qp("year"),
-                authorId = req.qp("authorId").toInt()
+                title = model.title,
+                year = model.year,
+                authorId = model.authorId ?: -1
             )
             res.status(201)
-            DAO.gson.toJson(book)
+            req.jsonOut(
+                fullFn = {dao.books.complete(book)},
+                elseFn = {book}
+            )
         }
 
         delete("/delete/:id") { req, res ->
@@ -176,21 +302,22 @@ fun main(args: Array<String>) {
             }
         }
 
-        post("/create") { req, res ->
+        put("/create") { req, res ->
+            val model = req.model(Author::class.java)
             val author = dao.authors.save(
-                firstName = req.qp("firstName"),
-                lastName = req.qp("lastName")
+                firstName = model.firstName ?: "",
+                lastName = model.lastName ?: ""
             )
             res.status(201)
             DAO.gson.toJson(author)
         }
 
-        // NOTE: don't use `patch` or you have to manually parse the `body` instead of using the `queryParams`
         post("/update/:id") { req, res ->
+            val model = req.model(Author::class.java)
             val author = dao.authors.update(
                 id = req.id(),
-                firstName = req.qp("firstName"),
-                lastName = req.qp("lastName")
+                firstName = model.firstName ?: "",
+                lastName = model.lastName ?: ""
             )
             res.status(201)
             DAO.gson.toJson(author)
@@ -217,6 +344,13 @@ fun getAddress(): String {
         }.first()
 }
 
-fun Request.qp(key: String): String = this.queryParams(key)
+fun <T> Request.model(clz: Class<T>): T = DAO.gson.fromJson(this.body(), clz)
 fun Request.id(): Int = this.params("id").toInt()
 fun Request.full(): Boolean = (this.queryParams("full") == "true")
+
+fun <T> Request.jsonOut(fullFn: ()->T, elseFn: ()->T): String {
+    return when {
+        this.full() -> DAO.gson.toJson(fullFn.invoke())
+        else -> DAO.gson.toJson(elseFn.invoke())
+    }
+}
